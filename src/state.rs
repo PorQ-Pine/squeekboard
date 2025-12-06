@@ -299,23 +299,23 @@ impl Application {
                 // For changes in active state, remove user's visibility override.
                 // Both cases spelled out explicitly, rather than by the wildcard,
                 // to not lose the notion that it's the opposition that matters
-                (InputMethod::InactiveSince(_old), InputMethod::Active(new_im), _)
+                (InputMethod::InactiveSince(_old), InputMethod::Active(new_im), vis_override)
                 => Self {
                     im: InputMethod::Active(new_im),
-                    visibility_override: visibility::State::NotForced,
+                    visibility_override: if vis_override == visibility::State::NotForced { visibility::State::NotForced } else { vis_override },
                     ..self
                 },
                 // Avoid triggering animation when old state was forced hidden
-                (InputMethod::Active(_old), InputMethod::InactiveSince(_since), visibility::State::ForcedHidden)
+                (InputMethod::Active(_old), InputMethod::InactiveSince(_since), vis_override)
                 => Self {
                     im: InputMethod::InactiveSince(now - animation::HIDING_TIMEOUT * 2),
-                    visibility_override: visibility::State::NotForced,
+                    visibility_override: if vis_override == visibility::State::NotForced { visibility::State::NotForced } else { vis_override },
                     ..self
                 },
-                (InputMethod::Active(_old), InputMethod::InactiveSince(since), _)
+                (InputMethod::Active(_old), InputMethod::InactiveSince(since), vis_override)
                 => Self {
                     im: InputMethod::InactiveSince(since),
-                    visibility_override: visibility::State::NotForced,
+                    visibility_override: if vis_override == visibility::State::NotForced { visibility::State::NotForced } else { vis_override },
                     ..self
                 },
                 // This is a weird case, there's no need to update an inactive state.
