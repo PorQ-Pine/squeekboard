@@ -46,7 +46,7 @@ pub mod c {
 
     extern "C" {
         // From libc, to let KeyMap get deallocated.
-        fn close(fd: u32);
+        fn close(fd: u32) -> i32;
 
         pub fn eek_virtual_keyboard_v1_key(
             virtual_keyboard: ZwpVirtualKeyboardV1,
